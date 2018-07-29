@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.springboot</groupId>
+    <artifactId>spring-boot-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.8.RELEASE</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <!-- Package as an executable jar/war -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.26.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${project.name}:${project.version}</name>
+                            <alias>rest-example</alias>
+                            <build>
+                                <from>openjdk:latest</from>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <cmd>java -jar maven/${project.name}-${project.version}.jar</cmd>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8081:8080</port>
+                                </ports>
+                               <!-- <wait>
+                                    <log>Hello World!</log>
+                                </wait>-->
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker:start</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- docker package-->
+            <!--<plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.26.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${project.name}:${project.version}</name>
+                        </image>
+                        <alias>rest-example</alias>
+                        <build>
+                            <from>openjdk:latest</from>
+                            <assembly>
+                                <descriptorRef>artifact</descriptorRef>
+                            </assembly>
+                            <cmd>java -jar maven/${project.name}-${project.version}.jar</cmd>
+                        </build>
+                        <run>
+                            <wait>
+                                <log>Hello World!!1</log>
+                            </wait>
+                        </run>
+                    </images>
+                </configuration>
+            </plugin>-->
+
+ <!--           <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.26.0</version>
+                <configuration>
+                    <logDate>default</logDate>
+                    <images>
+                        &lt;!&ndash; Docker Image to use &ndash;&gt;
+                        <image>
+                            <alias>ODS_DB</alias>
+                            &lt;!&ndash; Docker Image&ndash;&gt;
+                            <name>${project.name}:${project.version}</name>
+                            <run>
+                                <ports>
+                                    <port>8080:8080</port>
+                                </ports>
+                                <wait>
+                                    <log>server startup</log>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+        </plugins>
+    </build>
+   <!-- <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>-->
+</project>
